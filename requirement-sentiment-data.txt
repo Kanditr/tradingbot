@@ -1,0 +1,310 @@
+1. Macroeconomic Factors
+
+Economic Indicators
+
+	•	date: Date (e.g., 2023-10-15)
+	•	gdp_growth_rate: Float (Percentage, e.g., 2.5)
+	•	unemployment_rate: Float (Percentage, e.g., 5.2)
+	•	inflation_rate: Float (Percentage, e.g., 1.8)
+	•	consumer_confidence_index: Float (Index value, e.g., 98.6)
+	•	manufacturing_index: Float (Index value, e.g., 52.3)
+
+Interest Rates
+
+	•	date: Date
+	•	central_bank_interest_rate: Float (Percentage, e.g., 0.25)
+
+Currency Exchange Rates
+
+	•	date: Date
+	•	currency_pair: String (e.g., "USD/EUR")
+	•	exchange_rate: Float (e.g., 1.18)
+
+Commodity Prices
+
+	•	date: Date
+	•	commodity_name: String (e.g., "Crude Oil")
+	•	commodity_price: Float (Price per unit, e.g., 70.50)
+
+2. Industry and Sector Dynamics
+
+Industry Health Metrics
+
+	•	date: Date
+	•	industry_name: String (e.g., "Technology")
+	•	sector_name: String (e.g., "Information Technology")
+	•	industry_growth_rate: Float (Percentage, e.g., 4.2)
+	•	sector_growth_rate: Float (Percentage, e.g., 3.8)
+
+Technological Advancements
+
+	•	date: Date
+	•	innovation_description: String (e.g., "Introduction of 5G technology")
+	•	innovation_impact_score: Float (Scale from -1 to 1, e.g., 0.7)
+
+Regulatory Environment
+
+	•	effective_date: Date
+	•	regulation_name: String (e.g., "GDPR Compliance")
+	•	regulation_impact: String (Options: "Positive", "Negative", "Neutral")
+
+3. Geopolitical Factors
+
+Country Relationships
+
+	•	date: Date
+	•	country: String (e.g., "China")
+	•	event_description: String (e.g., "Trade tensions escalate")
+	•	event_impact: String (Options: "Positive", "Negative", "Neutral")
+
+Political Stability
+
+	•	date: Date
+	•	country: String
+	•	political_stability_index: Float (Scale from -2.5 to 2.5)
+
+Global Events
+
+	•	date: Date
+	•	event_name: String (e.g., "COVID-19 Pandemic")
+	•	event_type: String (e.g., "Pandemic", "War")
+	•	event_impact: String (Options: "Positive", "Negative", "Neutral")
+
+4. Market Trends
+
+Stock Market Trends
+
+	•	date: Date
+	•	market_index_name: String (e.g., "S&P 500")
+	•	market_index_value: Float (Index value, e.g., 4350.50)
+	•	market_trend: String (Options: "Bullish", "Bearish", "Neutral")
+
+Sector Rotation
+
+	•	date: Date
+	•	from_sector: String (e.g., "Utilities")
+	•	to_sector: String (e.g., "Technology")
+	•	rotation_magnitude: Float (Percentage, e.g., 1.5)
+
+Technical Indicators
+
+	•	date: Date
+	•	stock_ticker: String (e.g., "AAPL")
+	•	indicator_name: String (e.g., "50-day Moving Average")
+	•	indicator_value: Float (e.g., 150.25)
+
+5. Company-Specific News
+
+Financial Reports
+
+	•	date: Date
+	•	company_name: String
+	•	stock_ticker: String
+	•	report_type: String (Options: "Quarterly", "Annual")
+	•	revenue: Float (In USD, e.g., 85000000.00)
+	•	net_income: Float (In USD)
+	•	earnings_per_share: Float (In USD)
+
+Corporate Actions
+
+	•	action_effective_date: Date
+	•	action_type: String (Options: "Merger", "Acquisition", "Dividend", "Stock Split")
+	•	action_description: String
+
+Management Changes
+
+	•	effective_date: Date
+	•	position: String (e.g., "CEO")
+	•	name: String
+	•	change_type: String (Options: "Appointed", "Resigned")
+
+Product Developments
+
+	•	date: Date
+	•	product_name: String
+	•	development_type: String (Options: "Launch", "Update", "Discontinuation")
+	•	impact_estimate: String (Options: "Positive", "Negative", "Neutral")
+
+6. Social Sentiment and Media Coverage
+
+News Articles
+
+	•	publication_date: Date
+	•	article_title: String
+	•	article_source: String (e.g., "Reuters")
+	•	article_content: String
+	•	sentiment_score: Float (Scale from -1 to 1)
+
+Social Media Posts
+
+	•	post_date: Datetime
+	•	platform: String (e.g., "Twitter")
+	•	user_handle: String
+	•	post_content: String
+	•	sentiment_score: Float (Scale from -1 to 1)
+
+Analyst Reports
+
+	•	report_date: Date
+	•	analyst_name: String
+	•	firm_name: String
+	•	recommendation: String (Options: "Buy", "Hold", "Sell")
+	•	price_target: Float (In USD)
+
+7. Competitor Analysis
+
+Competitor Financial Metrics
+
+	•	date: Date
+	•	competitor_name: String
+	•	market_share: Float (Percentage)
+	•	revenue: Float (In USD)
+	•	net_income: Float (In USD)
+
+Competitor News
+
+	•	date: Date
+	•	competitor_name: String
+	•	news_type: String (e.g., "Product Launch")
+	•	news_description: String
+	•	impact_estimate: String (Options: "Positive", "Negative", "Neutral")
+
+8. Environmental, Social, and Governance (ESG) Factors
+
+ESG Scores
+
+	•	date: Date
+	•	company_name: String
+	•	esg_category: String (Options: "Environmental", "Social", "Governance")
+	•	esg_score: Float (Scale from 0 to 100)
+
+Sustainability Reports
+
+	•	publication_date: Date
+	•	report_title: String
+	•	company_name: String
+	•	key_findings: String
+
+9. Legal and Regulatory Issues
+
+Litigation Cases
+
+	•	date: Date
+	•	case_name: String
+	•	company_name: String
+	•	case_type: String (e.g., "Patent Infringement")
+	•	status: String (Options: "Pending", "Resolved")
+	•	potential_impact: String (Options: "High", "Medium", "Low")
+
+Regulatory Scrutiny
+
+	•	date: Date
+	•	agency_name: String (e.g., "SEC")
+	•	investigation_subject: String
+	•	status: String (Options: "Ongoing", "Closed")
+
+10. Supply Chain Factors
+
+Supply Chain Stability
+
+	•	date: Date
+	•	supplier_name: String
+	•	company_name: String
+	•	dependency_level: Float (Percentage, e.g., 40.0)
+	•	risk_level: String (Options: "High", "Medium", "Low")
+
+Cost of Raw Materials
+
+	•	date: Date
+	•	material_name: String (e.g., "Aluminum")
+	•	cost: Float (Price per unit)
+	•	price_change: Float (Percentage change)
+
+11. Consumer Behavior
+
+Demand Trends
+
+	•	date: Date
+	•	product_name: String
+	•	sales_volume: Integer (Units sold)
+	•	sales_growth_rate: Float (Percentage)
+
+Brand Perception
+
+	•	date: Date
+	•	brand_name: String
+	•	perception_score: Float (Scale from -1 to 1)
+
+12. Technological Factors
+
+Innovation Adoption
+
+	•	date: Date
+	•	technology_name: String (e.g., "Blockchain")
+	•	adoption_rate: Float (Percentage)
+	•	impact_on_company: String (Options: "Positive", "Negative", "Neutral")
+
+Cybersecurity Incidents
+
+	•	incident_date: Date
+	•	company_name: String
+	•	incident_description: String
+	•	severity_level: String (Options: "High", "Medium", "Low")
+
+12. Technological Factors
+
+Innovation Adoption
+
+	•	date: Date
+	•	technology_name: String (e.g., "Blockchain")
+	•	adoption_rate: Float (Percentage)
+	•	impact_on_company: String (Options: "Positive", "Negative", "Neutral")
+
+Cybersecurity Incidents
+
+	•	incident_date: Date
+	•	company_name: String
+	•	incident_description: String
+	•	severity_level: String (Options: "High", "Medium", "Low")
+
+14. Historical Performance and Seasonality
+
+Historical Stock Prices
+
+	•	date: Date
+	•	stock_ticker: String
+	•	open_price: Float (In USD)
+	•	close_price: Float (In USD)
+	•	high_price: Float (In USD)
+	•	low_price: Float (In USD)
+	•	volume: Integer (Number of shares)
+
+Seasonal Effects
+
+	•	season: String (e.g., "Q4", "Holiday Season")
+	•	effect_description: String
+	•	historical_performance: Float (Percentage change)
+
+15. Investor Behavior and Sentiment
+
+Ownership Structure
+
+	•	date: Date
+	•	company_name: String
+	•	institutional_ownership_percentage: Float (Percentage)
+	•	insider_ownership_percentage: Float (Percentage)
+	•	retail_ownership_percentage: Float (Percentage)
+
+Trading Volume
+
+	•	date: Date
+	•	stock_ticker: String
+	•	volume: Integer (Number of shares traded)
+
+Market Speculation
+
+	•	date: Date
+	•	rumor_description: String
+	•	source: String
+	•	credibility_score: Float (Scale from 0 to 1)
+

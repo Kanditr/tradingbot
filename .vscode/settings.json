@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./sentiment_analysis/data_retrieval",
+        "./sentiment_analysis"
+    ]
+}
