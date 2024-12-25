@@ -3,9 +3,12 @@ from alpaca.data.requests import StockBarsRequest, CryptoBarsRequest
 from alpaca.data.timeframe import TimeFrame
 import datetime
 import logging
+import pandas as pd
 import psycopg2
 from psycopg2 import sql
 import traceback
+import requests
+from typing import Dict, Any, Optional
 
 
 class DataFetcher:
@@ -21,6 +24,8 @@ class DataFetcher:
         )
         self.database_url = config['database_url']
         self.create_connection()
+        self.base_url = "https://api.polygon.io"
+        self.api_key = config['polygon_api_key']
 
     def create_connection(self):
         """ Create a database connection to the PostgreSQL database """
@@ -67,6 +72,7 @@ class DataFetcher:
             # Fetch data from the database for the available range
             db_data = self.fetch_data_from_db(symbol, asset_type, start_date, min(latest_timestamp, end_date))
             logging.info(f"Fetched {len(db_data)} records from the database")
+            logging.info(db_data)
             # If the latest timestamp in the database is less than the end date, fetch the remaining data from the API
             if latest_timestamp < end_date:
                 api_data = self.fetch_data_from_api(
@@ -149,3 +155,54 @@ class DataFetcher:
         """
         # Placeholder for actual data fetching logic
         return [{'news': 'Positive news article', 'timestamp': '2021-01-01'}, {'news': 'Negative news article', 'timestamp': '2021-01-02'}]
+
+    def fetch_technical_analysis_data(self, symbol: str, indicator: str, window: str) -> Dict[str, Any]:
+
+        url = f"{self.base_url}/v1/indicators/{indicator}/{symbol}"
+        params = {
+            "timespan": "day",
+            "adjusted": "true",
+            "window": window,
+            "series_type": "close",
+            "order": "desc",
+            "limit": "10",
+            "apiKey": self.api_key
+        }
+        try:
+            response = requests.get(url, params=params)
+            response.raise_for_status()
+            data = response.json()
+            logging.info(f"Technical indicator data for {symbol} ({indicator}): {data}")
+            return data
+        except requests.exceptions.RequestException as e:
+            logging.error(f"Error fetching technical analysis data: {e}")
+            return None
+
+    def fetch_close_prices(self, symbol: str, start_date: str, end_date: str) -> Optional[pd.DataFrame]:
+        """
+        Fetch the close prices for a given symbol between start_date and end_date.
+
+        :param symbol: The ticker symbol (e.g., 'AAPL')
+        :param start_date: The start date in 'YYYY-MM-DD' format
+        :param end_date: The end date in 'YYYY-MM-DD' format
+        :return: A pandas DataFrame with 'timestamp' and 'close' columns or None if an error occurs
+        """
+        if not self.connection:
+            logging.error("Database connection is not established.")
+            return None
+
+        try:
+            query = """
+                SELECT timestamp, close 
+                FROM ticker_data 
+                WHERE symbol = %s 
+                AND timestamp BETWEEN %s AND %s 
+                ORDER BY timestamp ASC
+            """
+            df = pd.read_sql_query(query, self.connection, params=(symbol, start_date, end_date))
+            logging.info(f"Fetched {len(df)} close price records for {symbol} from {start_date} to {end_date}.")
+            return df
+        except Exception as e:
+            logging.error(f"Error fetching close prices: {e}")
+            logging.debug(traceback.format_exc())
+            return None

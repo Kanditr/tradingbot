@@ -1,6 +1,8 @@
 import logging
 import psycopg2
 from psycopg2 import sql, Error
+from typing import Dict, Any
+import pandas as pd
 
 
 class DataProcessor:
@@ -95,3 +97,22 @@ class DataProcessor:
         """
         # Placeholder for actual data processing logic
         return sentiment_data
+
+    def process_sma_data(self, sma_data: Dict[str, Any], window: int) -> pd.DataFrame:
+        if sma_data and "results" in sma_data and "values" in sma_data["results"]:
+            results = sma_data["results"]["values"]
+            df = pd.DataFrame(results)
+            df = df.rename(columns={'value': f'SMA{window}'})
+            # Convert timestamp from milliseconds to datetime
+            df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+            return df[['timestamp', f'SMA{window}']]
+        else:
+            raise ValueError("Invalid SMA data format or no data found.")
+
+    def merge_sma_data(self, sma10_df, sma50_df):
+        """
+        Merge SMA10 and SMA50 data into a single DataFrame for analysis.
+        """
+        df_merged = pd.merge(sma10_df, sma50_df, on='timestamp', how='inner')
+        df_merged = df_merged.sort_values('timestamp', ascending=True).reset_index(drop=True)
+        return df_merged
