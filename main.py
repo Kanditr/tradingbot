@@ -1,6 +1,7 @@
 import argparse
 import logging
 import sys
+import pandas as pd
 import schedule
 import time
 import signal
@@ -100,64 +101,73 @@ def main():
     processed_ticker_data = db_data + processed_api_data if api_data else db_data
 
     close_prices_df = data_fetcher.fetch_close_prices(symbol, start_date, end_date)
-    logging.info(f'Close prices: {close_prices_df}')
+
+    # Ensure 'timestamp' is datetime and sort ascending
+    close_prices_df['timestamp'] = pd.to_datetime(close_prices_df['timestamp'])
+    df_merged = close_prices_df.sort_values('timestamp', ascending=True).reset_index(drop=True)
+
+    # Initialize Technical Analyzer
+    technical_analyzer = SMATechnicalAnalyzer(df=df_merged, trend_window=5, sma_windows=[10, 50])
+
+    # Run Analysis
+    technical_scores = technical_analyzer.run_analysis()
 
     # Perform technical analysis
     # sma10_data = data_fetcher.fetch_technical_analysis_data(symbol, 'sma', '10')
     # sma50_data = data_fetcher.fetch_technical_analysis_data(symbol, 'sma', '50')
 
-    sma10_data = {
-        'results': {
-            'underlying': {
-                'url': 'https://api.polygon.io/v2/aggs/ticker/NVO/range/1/day/1063281600000/1734835774539?limit=57&sort=desc'
-            },
-            'values': [
-                {'timestamp': 1734670800000, 'value': 105.79800000000003},
-                {'timestamp': 1734584400000, 'value': 108.37500000000003},
-                {'timestamp': 1734498000000, 'value': 108.91300000000001},
-                {'timestamp': 1734411600000, 'value': 109.21400000000001},
-                {'timestamp': 1734325200000, 'value': 109.33300000000001},
-                {'timestamp': 1734066000000, 'value': 109.39500000000002},
-                {'timestamp': 1733979600000, 'value': 109.38000000000002},
-                {'timestamp': 1733893200000, 'value': 109.13200000000002},
-                {'timestamp': 1733806800000, 'value': 108.57600000000002},
-                {'timestamp': 1733720400000, 'value': 108.11300000000001}
-            ]
-        },
-        'status': 'OK',
-        'request_id': '843116985f555981f3a40045cd12f97f',
-        'next_url': 'https://api.polygon.io/v1/indicators/sma/NVO?cursor=...'
-    }
+    # sma10_data = {
+    #     'results': {
+    #         'underlying': {
+    #             'url': 'https://api.polygon.io/v2/aggs/ticker/NVO/range/1/day/1063281600000/1734835774539?limit=57&sort=desc'
+    #         },
+    #         'values': [
+    #             {'timestamp': 1734670800000, 'value': 105.79800000000003},
+    #             {'timestamp': 1734584400000, 'value': 108.37500000000003},
+    #             {'timestamp': 1734498000000, 'value': 108.91300000000001},
+    #             {'timestamp': 1734411600000, 'value': 109.21400000000001},
+    #             {'timestamp': 1734325200000, 'value': 109.33300000000001},
+    #             {'timestamp': 1734066000000, 'value': 109.39500000000002},
+    #             {'timestamp': 1733979600000, 'value': 109.38000000000002},
+    #             {'timestamp': 1733893200000, 'value': 109.13200000000002},
+    #             {'timestamp': 1733806800000, 'value': 108.57600000000002},
+    #             {'timestamp': 1733720400000, 'value': 108.11300000000001}
+    #         ]
+    #     },
+    #     'status': 'OK',
+    #     'request_id': '843116985f555981f3a40045cd12f97f',
+    #     'next_url': 'https://api.polygon.io/v1/indicators/sma/NVO?cursor=...'
+    # }
 
-    sma50_data = {
-        'results': {
-            'underlying': {
-                'url': 'https://api.polygon.io/v2/aggs/ticker/NVO/range/1/day/1063281600000/1734835774539?limit=57&sort=desc'
-            },
-            'values': [
-                {'timestamp': 1734670800000, 'value': 100.12300000000002},
-                {'timestamp': 1734584400000, 'value': 102.45600000000002},
-                {'timestamp': 1734498000000, 'value': 104.78000000000002},
-                {'timestamp': 1734411600000, 'value': 107.10000000000002},
-                {'timestamp': 1734325200000, 'value': 109.43000000000002},
-                {'timestamp': 1734066000000, 'value': 111.76000000000002},
-                {'timestamp': 1733979600000, 'value': 114.09000000000002},
-                {'timestamp': 1733893200000, 'value': 116.42000000000001},
-                {'timestamp': 1733806800000, 'value': 118.75000000000001},
-                {'timestamp': 1733720400000, 'value': 121.08000000000001}
-            ]
-        },
-        'status': 'OK',
-        'request_id': '843116985f555981f3a40045cd12f97f',
-        'next_url': 'https://api.polygon.io/v1/indicators/sma/NVO?cursor=...'
-    }
+    # sma50_data = {
+    #     'results': {
+    #         'underlying': {
+    #             'url': 'https://api.polygon.io/v2/aggs/ticker/NVO/range/1/day/1063281600000/1734835774539?limit=57&sort=desc'
+    #         },
+    #         'values': [
+    #             {'timestamp': 1734670800000, 'value': 100.12300000000002},
+    #             {'timestamp': 1734584400000, 'value': 102.45600000000002},
+    #             {'timestamp': 1734498000000, 'value': 104.78000000000002},
+    #             {'timestamp': 1734411600000, 'value': 107.10000000000002},
+    #             {'timestamp': 1734325200000, 'value': 109.43000000000002},
+    #             {'timestamp': 1734066000000, 'value': 111.76000000000002},
+    #             {'timestamp': 1733979600000, 'value': 114.09000000000002},
+    #             {'timestamp': 1733893200000, 'value': 116.42000000000001},
+    #             {'timestamp': 1733806800000, 'value': 118.75000000000001},
+    #             {'timestamp': 1733720400000, 'value': 121.08000000000001}
+    #         ]
+    #     },
+    #     'status': 'OK',
+    #     'request_id': '843116985f555981f3a40045cd12f97f',
+    #     'next_url': 'https://api.polygon.io/v1/indicators/sma/NVO?cursor=...'
+    # }
 
-    sma10_df = data_processor.process_sma_data(sma10_data, 10)
-    sma50_df = data_processor.process_sma_data(sma50_data, 50)
+    # sma10_df = data_processor.process_sma_data(sma10_data, 10)
+    # sma50_df = data_processor.process_sma_data(sma50_data, 50)
 
-    merged_sma = data_processor.merge_sma_data(sma10_df, sma50_df)
-    sma_analyzer = SMATechnicalAnalyzer(df=merged_sma, trend_window=5)
-    sma_scores = sma_analyzer.run_analysis()
+    # merged_sma = data_processor.merge_sma_data(sma10_df, sma50_df)
+    # sma_analyzer = SMATechnicalAnalyzer(df=merged_sma, trend_window=5)
+    # sma_scores = sma_analyzer.run_analysis()
 
     # technical_signal = technical_analyzer.analyze(processed_ticker_data, sma_10_data, sma_50_data, symbol)
 

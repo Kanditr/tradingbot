@@ -3,6 +3,7 @@ from openai import OpenAI
 import pandas as pd
 from typing import Dict
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 # class TechnicalAnalyzer:
@@ -17,10 +18,22 @@ import numpy as np
 #         return 80  # Example mock score
 
 class SMATechnicalAnalyzer:
-    def __init__(self, df: pd.DataFrame, trend_window: int = 5):
+    def __init__(self, df: pd.DataFrame, trend_window: int = 5, sma_windows: list = [10, 50]):
         self.df = df.copy()
         self.trend_window = trend_window
+        self.sma_windows = sma_windows
         self.scores = {}
+
+    def calculate_sma(self):
+        """
+        Calculate SMA for specified window sizes and add them as new columns.
+        """
+        try:
+            for window in self.sma_windows:
+                self.df[f'SMA{window}'] = self.df['close'].rolling(window=window, min_periods=1).mean()
+            logging.info("SMA columns added to DataFrame.")
+        except Exception as e:
+            logging.error(f"Error calculating SMA: {e}")
 
     def calculate_indicators(self):
         try:
@@ -141,13 +154,32 @@ class SMATechnicalAnalyzer:
     #         logging.error(f"Error calculating final score: {e}")
     #         return 0
 
+    def plot_sma(self):
+        """
+        Plot Close Price along with SMA indicators.
+        """
+        try:
+            plt.figure(figsize=(12, 6))
+            plt.plot(self.df['timestamp'], self.df['close'], label='Close Price', color='blue')
+            for window in self.sma_windows:
+                plt.plot(self.df['timestamp'], self.df[f'SMA{window}'], label=f'SMA{window}')
+            plt.title('Close Price and SMA Indicators')
+            plt.xlabel('Date')
+            plt.ylabel('Price')
+            plt.legend()
+            plt.show()
+        except Exception as e:
+            logging.error(f"Error plotting SMA: {e}")
+
     def run_analysis(self):
         """
         Execute the complete SMA technical analysis.
         :return: Dictionary of scores
         """
+        self.calculate_sma()
         self.calculate_indicators()
         self.score_sma_crossover_strength()
+        # self.plot_sma()
         # final_score = self.calculate_final_score()
         return self.scores
 
